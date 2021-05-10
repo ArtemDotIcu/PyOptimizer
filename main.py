@@ -9,14 +9,36 @@ from colorama import Fore
 username = getpass.getuser()
 temp_del_dir = r'c:\windows\temp'
 prefetch_del_dir = r'c:\windows\Prefetch'
+user_temp_del_dir = r'c:\%temp%'
+
 windows = 0
 
-# downloads - soon
+
+# clear downloads
 def downloads():
+    time.sleep(0.1)
+    clear()
+    print("Soon...")
+    time.sleep(5)
+    clear()
+    welcome()
+
+
+# clear
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+# downloads - soon
+def windows_cleaner():
     time.sleep(0.15)
     clear()
     time.sleep(0.1)
-    print(Fore.RED + "Soon!" + Fore.RESET)
+    print("Starting cleanmgr...")
+    if os.name == 'nt':
+        os.system("cleanmgr")
+    else:
+        print("You are non windows user, so you can use Windows cleaner.")
     time.sleep(5)
     clear()
     welcome()
@@ -53,6 +75,18 @@ def temp():
         print('Fail: Unable to Clean Windows Temp Folder')
 
 
+# temp
+def user_temp():
+    process = subprocess.Popen('rmdir /S /Q {}'.format(user_temp_del_dir), shell=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    _ = process.communicate()
+    return_code = process.returncode
+    if return_code == 0:
+        time.sleep(0.1)
+    else:
+        print('Fail: Unable to Clean User Temp Folder')
+
+
 # prefetch
 def prefetch():
     process = subprocess.Popen('rmdir /S /Q {}'.format(prefetch_del_dir), shell=True,
@@ -67,11 +101,16 @@ def prefetch():
 
 # optimizer
 def optimizer():
+    time.sleep(0.12)
+    clear()
     time.sleep(2)
     print(Fore.RED + "\nStarting optimize" + Fore.RESET)
     time.sleep(1.2)
     print("Clearing temp files...")
     temp()
+    time.sleep(0.1)
+    print("Clearing user temp files...")
+    user_temp()
     time.sleep(0.1)
     print("Clearing prefetch files...")
     prefetch()
@@ -106,10 +145,6 @@ def credit():
     clear()
 
 
-# clear
-def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
 # Welcome
 def welcome():
     print("""
@@ -127,9 +162,9 @@ def welcome():
     print("""
     
     
-    1. Clear junk files
-    2. Clear downloads
-    3. About
+    1. Clear junk files     4. Clear downloads
+    2. Windows cleaner      5. Exit
+    3. About                
     
     """)
     menu = input("1-3: ")
@@ -138,17 +173,24 @@ def welcome():
         optimizer()
     else:
         if menu == "2":
-            downloads()
+            windows_cleaner()
         else:
             if menu == "3":
                 about()
             else:
-                time.sleep(0.5)
-                print(Fore.RED + "\nInvalid argument.")
-                print("Please retry." + Fore.RESET)
-                time.sleep(5)
-                clear()
-                welcome()
+                if menu == "4":
+                    downloads()
+                else:
+                    if menu == "5":
+                        exit()
+                    else:
+                        time.sleep(0.5)
+                        print(Fore.RED + "\nInvalid argument.")
+                        print("Please retry." + Fore.RESET)
+                        time.sleep(5)
+                        clear()
+                        welcome()
+
 
 # code
 clear()
